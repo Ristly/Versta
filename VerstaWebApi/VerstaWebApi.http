@@ -1,0 +1,6 @@
+@VerstaWebApi_HostAddress = http://localhost:5005
+
+GET {{VerstaWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
