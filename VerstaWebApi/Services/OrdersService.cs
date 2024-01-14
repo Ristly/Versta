@@ -3,15 +3,18 @@ using Microsoft.EntityFrameworkCore;
 using VerstaWebApi.Contexts;
 using VerstaWebApi.Models;
 using VerstaWebApi.Models.Wrapper;
+using VerstaWebApi.Resources;
 
 namespace VerstaWebApi.Services;
 
 public class OrdersService : IOrdersService
 {
     private readonly ApplicationDbContext _context;
-    public OrdersService(ApplicationDbContext context) 
+    private readonly IHttpContextAccessor _contextAccessor;
+    public OrdersService(ApplicationDbContext context, IHttpContextAccessor contextAccessor) 
     { 
         _context = context;
+        _contextAccessor = contextAccessor;
     }
 
     public async Task<Result> CreateOrderAsync(OrderDTO order)
@@ -31,15 +34,19 @@ public class OrdersService : IOrdersService
             await _context.SaveChangesAsync();
             createdOrder.OrderNumber = createdOrder.Id.ToString();
             await _context.SaveChangesAsync();
-            return Result.Success("Order created");
+            var res = Result.Success(ResponseMessage.OrderCreationSuccess);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
         catch(DbUpdateException ex)
-        {
+        {     
 #if DEBUG
-            return Result.Fail(ex.Message, StatusCodes.Status500InternalServerError);
+            var res = Result.Fail(ex.Message, StatusCodes.Status500InternalServerError);
 #else
-            return Result.Fail("Server error", StatusCodes.Status500InternalServerError);
+            var res = Result.Fail(ResponseMessage.ServerError, StatusCodes.Status500InternalServerError);
 #endif
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+            return res;
         }
     }
 
@@ -52,16 +59,24 @@ public class OrdersService : IOrdersService
             if(result is null)
                 throw new KeyNotFoundException();
 
-            return Result<Order>.Success("Data requested", result);
+            var res = Result<Order>.Success(ResponseMessage.DataRequestSuccess, result);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+
+            return res;
         }
         catch (KeyNotFoundException)
         {
-            return Result<Order>.Fail($"Order №{id} not found", null, StatusCodes.Status404NotFound);
+            var res = Result<Order>.Fail(ResponseMessage.OrderNotFound, null, StatusCodes.Status404NotFound);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+
+            return res;
         }
         catch (ArgumentOutOfRangeException)
         {
-            return Result<Order>.Fail("Wrong format of an argument",null, StatusCodes.Status400BadRequest);
+            var res = Result<Order>.Fail(ResponseMessage.ArgumentOutOfRange, null, StatusCodes.Status400BadRequest);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
 
+            return res;
         }
     }
 
@@ -71,12 +86,18 @@ public class OrdersService : IOrdersService
         {
             var result = await _context.Orders.ToListAsync();
 
-            return Result<IEnumerable<Order>>.Success("Data requested", result);
+            var res = Result<IEnumerable<Order>>.Success("Data requested", result);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+
+            return res;
         }   
         catch (ArgumentOutOfRangeException)
         {
-            return Result<IEnumerable<Order>>.Fail("Wrong format of an argument", null, StatusCodes.Status400BadRequest);
 
+            var res = Result<IEnumerable<Order>>.Fail(ResponseMessage.ArgumentOutOfRange, null, StatusCodes.Status400BadRequest);
+            _contextAccessor.HttpContext.Response.StatusCode = res.Status;
+
+            return res;
         }
     }
 }

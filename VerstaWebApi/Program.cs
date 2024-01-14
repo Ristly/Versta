@@ -6,6 +6,7 @@ using VerstaWebApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IOrdersService, OrdersService>();
 builder.Services.AddDbContext<ApplicationDbContext>((options )=>
 {

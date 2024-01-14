@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Primitives;
-using System.Net;
-using System.Text.Json;
+﻿using System.Text.Json;
 using VerstaWebApp.Models;
 
 namespace VerstaWebApp.Services;
@@ -19,16 +16,11 @@ public class OrdersApiService : IOrdersApiService
 
     public async Task<IEnumerable<Order>> GetOrdersAsync()
     {
-
         var response = await _httpClient.GetAsync(_apiUrl);
         response.EnsureSuccessStatusCode();
         var res = await response.Content.ReadFromJsonAsync<Response<IEnumerable<Order>>>();
 
-        var checkStatus = new HttpResponseMessage((HttpStatusCode)res.Status);
-        checkStatus.EnsureSuccessStatusCode();
-
         return res.Data;
-
     }
     public async Task<Order> GetOrderByIdAsync(string id)
     {
@@ -36,26 +28,19 @@ public class OrdersApiService : IOrdersApiService
         response.EnsureSuccessStatusCode();
         var res = await response.Content.ReadFromJsonAsync<Response<Order>>();
 
-        var checkStatus = new HttpResponseMessage((HttpStatusCode)res.Status);
-        checkStatus.EnsureSuccessStatusCode();
-
         return res.Data;
     }
     public async Task<bool> CreateOrderAsync(OrderDTO orderDTO)
     {
         var json = JsonSerializer.Serialize(orderDTO);
 
-
         var response = await _httpClient.PostAsync(_apiUrl, JsonContent.Create(orderDTO));
         response.EnsureSuccessStatusCode();
         var res = await response.Content.ReadFromJsonAsync<Response>();
 
-        var checkStatus = new HttpResponseMessage((HttpStatusCode)res.Status);
-        checkStatus.EnsureSuccessStatusCode();
-
         return true;
     }
 
-    
+
 
 }

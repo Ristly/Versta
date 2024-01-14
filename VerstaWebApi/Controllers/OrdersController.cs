@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Cors;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using VerstaWebApi.Models;
 using VerstaWebApi.Services;
 
@@ -11,7 +9,7 @@ namespace VerstaWebApi.Controllers;
 public class OrdersController : ControllerBase
 {
     private readonly IOrdersService _ordersService;
-    public OrdersController(IOrdersService ordersService) 
+    public OrdersController(IOrdersService ordersService)
     {
         _ordersService = ordersService;
     }
@@ -33,7 +31,7 @@ public class OrdersController : ControllerBase
     public async Task<IActionResult> GetOrderByIdAsync(string id)
         => new JsonResult(await _ordersService.GetOrderByIdAsync(id));
 
- 
+
     [HttpPost]
     public async Task<IActionResult> CreateOrderAsync([FromBody] OrderDTO order)
         => new JsonResult(await _ordersService.CreateOrderAsync(order));
