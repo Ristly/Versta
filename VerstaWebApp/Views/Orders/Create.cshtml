@@ -1,0 +1,51 @@
+﻿@model OrderDTO
+@{
+    ViewData["Title"] = "Create Page";
+}
+
+<div class="d-flex flex-column w-50">
+    <h1 class="text-center">Create Order</h1>
+    <hr />
+    @using (Html.BeginForm("Create", "Orders", FormMethod.Post, new { @class = "form form-control d-flex flex-column  " }))
+    {
+
+        <div class="d-flex justify-content-around ">
+
+            <div class="d-flex flex-column justify-content-around">
+                @Html.LabelFor(x => x.SenderCity, "Input city of Sender", new { @class = "form-label" })
+                @Html.LabelFor(x => x.SenderAddress, "Input address of Sender", new { @class = "form-label" })
+                @Html.LabelFor(x => x.ReceiverCity, "Input city of Receiver", new { @class = "form-label" })
+                @Html.LabelFor(x => x.ReceiverAddress, "Input address of Receiver", new { @class = "form-label" })
+                @Html.LabelFor(x => x.Weight, "Input order's weight", new { @class = "form-label" })
+                @Html.LabelFor(x => x.ReceiveDate, "Input receive date", new { @class = "form-label" })
+                <br />
+            </div>
+            <div class="d-flex flex-column ">
+                @Html.EditorFor(x => x.SenderCity)
+                @Html.EditorFor(x => x.SenderAddress)
+                @Html.EditorFor(x => x.ReceiverCity)
+                @Html.EditorFor(x => x.ReceiverAddress)
+                @Html.EditorFor(x => x.Weight)
+                @Html.EditorFor(x => x.ReceiveDate)
+               
+            </div>
+            
+        </div>
+
+        <input type="submit" value="Create" class="btn btn-success m-5 mb-0 mt-2" />
+        <div class="d-flex flex-column justify-content-around  text-center">
+            @Html.ValidationMessageFor(x => x.SenderCity, null, new { @class = "form-text text-danger" })
+            @Html.ValidationMessageFor(x => x.SenderAddress, null, new { @class = "form-text text-danger" })
+            @Html.ValidationMessageFor(x => x.ReceiverCity, null, new { @class = "form-text text-danger" })
+            @Html.ValidationMessageFor(x => x.ReceiverAddress, null, new { @class = "form-text text-danger" })
+            @Html.ValidationMessageFor(x => x.Weight, null, new { @class = "form-text text-danger" })
+            @Html.ValidationMessageFor(x => x.ReceiveDate, null, new { @class = "form-text text-danger" })
+
+        </div>
+    }
+</div>
+
+
+@section Scripts{
+
+}

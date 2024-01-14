@@ -14,13 +14,22 @@ public class OrdersService : IOrdersService
         _context = context;
     }
 
-    public async Task<Result> CreateOrderAsync(Order order)
+    public async Task<Result> CreateOrderAsync(OrderDTO order)
     {    
         try
         {
-            _context.Orders.Add(order);
+            var createdOrder = new Order()
+            {
+                SenderCity = order.SenderCity,
+                SenderAddress = order.SenderAddress,
+                ReceiverCity = order.ReceiverCity,
+                ReceiverAddress = order.ReceiverAddress,
+                ReceiveDate = order.ReceiveDate,
+                Weight = order.Weight,
+            };
+            _context.Orders.Add(createdOrder);
             await _context.SaveChangesAsync();
-            order.OrderNumber = order.Id.ToString();
+            createdOrder.OrderNumber = createdOrder.Id.ToString();
             await _context.SaveChangesAsync();
             return Result.Success("Order created");
         }
@@ -43,7 +52,7 @@ public class OrdersService : IOrdersService
             if(result is null)
                 throw new KeyNotFoundException();
 
-            return Result<Order>.Success("Order created", result);
+            return Result<Order>.Success("Data requested", result);
         }
         catch (KeyNotFoundException)
         {
@@ -62,7 +71,7 @@ public class OrdersService : IOrdersService
         {
             var result = await _context.Orders.ToListAsync();
 
-            return Result<IEnumerable<Order>>.Success("Order created", result);
+            return Result<IEnumerable<Order>>.Success("Data requested", result);
         }   
         catch (ArgumentOutOfRangeException)
         {

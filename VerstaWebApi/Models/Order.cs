@@ -7,7 +7,6 @@ namespace VerstaWebApi.Models;
 
 public class Order
 {
-    [JsonIgnore]
     public Guid Id { get; set; }
 
     [JsonIgnore]

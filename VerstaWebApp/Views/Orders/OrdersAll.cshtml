@@ -1,0 +1,48 @@
+﻿@model IEnumerable<Order>
+@{
+    ViewData["Title"] = "List of Orders";
+}
+
+<div class="w-75">
+    <table class="table table-light table-hover ">
+        <thead class="thead text-center">
+            <tr>
+                <th scope="col">Order №</th>
+                <th scope="col">Sender City</th>
+                <th scope="col">Sender Adress</th>
+                <th scope="col">Receiver City</th>
+                <th scope="col">Receiver Address</th>
+                <th scope="col">Weight</th>
+                <th scope="col">Delivery Date</th>
+            </tr>
+        </thead>
+        <tbody id="ordersBody" class="text-center">
+            
+            @foreach(var item in Model)
+            {
+                <tr onclick="location.href = '@Url.Action("GetById", "Orders", new { id = item.Id })'">
+                    <td> @item.OrderNumber </td>
+                    <td> @item.SenderCity </td>
+                    <td> @item.SenderAddress </td>
+                    <td> @item.ReceiverCity </td>
+                    <td> @item.ReceiverAddress </td>
+                    <td> @item.Weight </td>
+                    <td> @item.ReceiveDate </td>
+                </tr>
+                
+               
+
+            }
+
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        // $('#ordersBody').click(function () {
+        //     get
+        // });
+        
+    </script>
+}
