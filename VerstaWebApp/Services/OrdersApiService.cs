@@ -35,10 +35,6 @@ public class OrdersApiService : IOrdersApiService
         var response = await _httpClient.PostAsync(_apiUrl, JsonContent.Create(orderDTO));
         response.EnsureSuccessStatusCode();
 
-
         return true;
     }
-
-
-
 }
