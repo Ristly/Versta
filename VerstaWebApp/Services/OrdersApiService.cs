@@ -32,11 +32,9 @@ public class OrdersApiService : IOrdersApiService
     }
     public async Task<bool> CreateOrderAsync(OrderDTO orderDTO)
     {
-        var json = JsonSerializer.Serialize(orderDTO);
-
         var response = await _httpClient.PostAsync(_apiUrl, JsonContent.Create(orderDTO));
         response.EnsureSuccessStatusCode();
-        var res = await response.Content.ReadFromJsonAsync<Response>();
+
 
         return true;
     }
